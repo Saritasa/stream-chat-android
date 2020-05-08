@@ -99,7 +99,7 @@ afterEvaluate { project ->
 
     if (project.getPlugins().hasPlugin('com.android.application') ||
             project.getPlugins().hasPlugin('com.android.library')) {
-        task install2(type: Upload, dependsOn: assemble) {
+        task install(type: Upload, dependsOn: assemble) {
             repositories.mavenInstaller {
                 configuration = configurations.archives
 
@@ -138,15 +138,15 @@ afterEvaluate { project ->
             }
         }
 
-//        task androidJavadocs(type: Javadoc) {
-//            source = android.sourceSets.main.java.source
-//            classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-//        }
-//
-//        task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-//            classifier = 'javadoc'
-//            from androidJavadocs.destinationDir
-//        }
+        task androidJavadocs(type: Javadoc) {
+            source = android.sourceSets.main.java.source
+            classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+        }
+
+        task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+            classifier = 'javadoc'
+            from androidJavadocs.destinationDir
+        }
 
         task androidSourcesJar(type: Jar) {
             classifier = 'sources'
@@ -194,10 +194,10 @@ afterEvaluate { project ->
             from sourceSets.main.allSource
         }
 
-//        task javadocJar(type: Jar, dependsOn: javadoc) {
-//            classifier = 'javadoc'
-//            from javadoc.destinationDir
-//        }
+        task javadocJar(type: Jar, dependsOn: javadoc) {
+            classifier = 'javadoc'
+            from javadoc.destinationDir
+        }
     }
     // Silencing the more picky java8 javadoc complaints
     // http://stackoverflow.com/questions/22528767/how-to-work-around-the-stricter-java-8-javadoc-when-using-maven
@@ -213,10 +213,10 @@ afterEvaluate { project ->
         if (project.getPlugins().hasPlugin('com.android.application') ||
                 project.getPlugins().hasPlugin('com.android.library')) {
             archives androidSourcesJar
-//            archives androidJavadocsJar
+            archives androidJavadocsJar
         } else {
             archives sourcesJar
-//            archives javadocJar
+            archives javadocJar
         }
     }
 }

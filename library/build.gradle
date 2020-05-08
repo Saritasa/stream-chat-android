@@ -6,6 +6,8 @@ apply plugin: "de.mannodermaus.android-junit5"
 
 //apply plugin: 'jacoco-android'
 
+apply from: '../gradle-maven-push.gradle'
+
 group = 'com.github.GetStream'
 
 def DEFAULT_COMPILE_SDK_VERSION = 29
@@ -18,7 +20,7 @@ def DEFAULT_API_TIMEOUT = 1000 * 6
 def DEFAULT_CDN_TIMEOUT = 1000 * 6
 
 android {
-    compileSdkVersion rootProject.hasProperty('compileSdkVersion') ? rootProject.compileSdkVersion : DEFAULT_COMPILE_SDK_VERSION
+    compileSdkVersion  29
 
     defaultConfig {
 

@@ -99,7 +99,9 @@ public class ChannelViewModel extends AndroidViewModel implements LifecycleHandl
     private TaggedLogger logger = ChatLogger.Companion.get("ChannelViewModel");
 
 
-    public ChannelViewModel(Application application, String channelType, String channelId) {
+
+
+    public ChannelViewModel(Application application, String channelType, String channelId, String messageId) {
         super(application);
 
         this.channelType = channelType;
@@ -108,7 +110,7 @@ public class ChannelViewModel extends AndroidViewModel implements LifecycleHandl
 
         chatDomain = ChatDomain.instance();
 
-        Result<ChannelController> result = chatDomain.getUseCases().getWatchChannel().invoke(this.cid, 30).execute();
+        Result<ChannelController> result = chatDomain.getUseCases().getWatchChannel().invoke(this.cid, 0).execute();
 
         channelController = result.data();
 
@@ -126,7 +128,6 @@ public class ChannelViewModel extends AndroidViewModel implements LifecycleHandl
         reachedEndOfPagination = channelController.getEndOfOlderMessages();
         unreadCount = channelController.getUnreadCount();
         threadMessages = new MutableLiveData<>();
-
 
         logger.logI("instance created");
 
@@ -331,6 +332,15 @@ public class ChannelViewModel extends AndroidViewModel implements LifecycleHandl
             chatDomain.getUseCases().getThreadLoadMore().invoke(cid, activeThread.getValue().getId(), 30).execute();
         } else {
             chatDomain.getUseCases().getLoadOlderMessages().invoke(cid, Constant.DEFAULT_LIMIT).execute();
+        }
+    }
+
+    public void loadNewerMessage(){
+        if (isThread()) {
+            //We don't need it.
+            chatDomain.getUseCases().getThreadLoadMore().invoke(cid, activeThread.getValue().getId(), 30).execute();
+        } else {
+            chatDomain.getUseCases().getLoadNewerMessages().invoke(cid, Constant.DEFAULT_LIMIT).execute();
         }
     }
 
